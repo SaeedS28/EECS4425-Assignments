@@ -16,3 +16,24 @@ count(seq1,2) # outputs the dimers for the sequence
 
 # Part c
 count(seq1,3) # outputs the dimers for the sequence
+
+
+
+# Question 3
+
+extractAndIndicate <- function(seqInFunc, startIndex,endIndex){
+  # checking for illegal arguments
+  if(is.character(seqInFunc)){
+    print("Data passed in is a char vector")
+  }
+  else{
+    stop('The data type passed is not a character')
+  }
+  if((startIndex < 1) || (endIndex > length(seqInFunc)) || (startIndex > length(seqInFunc)) || (endIndex < startIndex)){
+    stop('Index out of bounds')
+  }
+  
+  
+}
+
+extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 1)
