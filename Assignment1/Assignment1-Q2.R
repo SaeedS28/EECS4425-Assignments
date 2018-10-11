@@ -11,3 +11,7 @@ count(seq1,1, freq = FALSE) # outputs the freqency of bases
 
 # Part b
 count(seq1,2) # outputs the dimers for the sequence
+
+
+# Part c
+count(seq1,3) # outputs the dimers for the sequence
