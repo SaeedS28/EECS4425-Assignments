@@ -37,3 +37,16 @@ while(j<401){
 print(dnaSeq2)
 
 #print(nchar(dnaSeq2))
+
+
+# Code for Part 3 of Question 1
+dnaSeq3 <- ""
+k <- 1
+randVal=0;
+  
+while (k<601) {
+  if(k %% 3 ==0){
+    print(sprintf("%i is divisible by 3",k))
+  }
+  k = k+1
+}
