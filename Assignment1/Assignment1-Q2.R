@@ -21,7 +21,7 @@ count(seq1,3) # outputs the dimers for the sequence
 
 # Question 3
 
-extractAndIndicate <- function(seqInFunc, startIndex,endIndex){
+extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   # checking for illegal arguments
   if(is.character(seqInFunc)){
     print("Data passed in is a char vector")
@@ -33,7 +33,25 @@ extractAndIndicate <- function(seqInFunc, startIndex,endIndex){
     stop('Index out of bounds')
   }
   
+  # fetches the subsequence from the bigger sequence
+  subsequence <- seqInFunc[startIndex:endIndex]
+  print(subsequence)
   
+  # generate indicator sequence
+  counter <- 1
+  
+  indicatorSequence <- numeric()
+  
+  while (counter <= length(subsequence)) {
+    if(subsequence[counter] == "g"){
+      indicatorSequence <- append(indicatorSequence,1)
+    }
+    else{
+      indicatorSequence <- append(indicatorSequence,0)
+    }
+    counter <- counter + 1
+  }
+  print(indicatorSequence)
 }
 
-extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 1)
+extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 10)
