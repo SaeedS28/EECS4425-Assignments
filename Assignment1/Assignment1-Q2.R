@@ -1,3 +1,4 @@
+#install.packages("seqinr")
 # Question 2
 
 library(seqinr)

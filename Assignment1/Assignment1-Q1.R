@@ -1,15 +1,17 @@
 # Code for Part 1 of Question 1
-dnaSeq1 <- ""
 i <- 0
-subSeq <- "ACTG"
+#subSeq <- "ACTG"
+dnaSeq1 <- character()
 
-while (i < 100) { # The loop nuns 100 times because 4 bases x 100 = 400 base strand
-  dnaSeq1 = paste(dnaSeq1,subSeq,sep="") #string concatenation
+while (i < 100) { # The loop nuns 400 times because 4 bases x 100 = 400 base strand
+  dnaSeq1 <- append(dnaSeq1,"A")
+  dnaSeq1 <- append(dnaSeq1,"C")
+  dnaSeq1 <- append(dnaSeq1,"T")
+  dnaSeq1 <- append(dnaSeq1,"G")
   i = i+1
 }
-
 print(dnaSeq1)
-print(nchar(dnaSeq1))
+length(dnaSeq1)
 
 
 # Code for Part 2 of Question 1
