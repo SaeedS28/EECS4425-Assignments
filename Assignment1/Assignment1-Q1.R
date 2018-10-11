@@ -45,8 +45,35 @@ k <- 1
 randVal=0;
   
 while (k<601) {
+  
+  # this generates a random number based on the probabilities given in the question 
+  # sheet only when the number is divisible by three.
+  # goes to default cause of equal probabilities otherwise.
   if(k %% 3 ==0){
-    print(sprintf("%i is divisible by 3",k))
+    #print(sprintf("%i is divisible by 3",k))
+    
+    randVal = sample(c(1,2,3,4), 1, replace=TRUE, prob=c(0.5,0.25,0.15,0.1))
+    #print(randVal)
+    #print(sprintf("%i is divisible by 3",k))
+  }
+  else{
+    randVal = sample(c(1,2,3,4), 1, replace=TRUE)
+  }
+
+  if(randVal==1){
+    dnaSeq3 = paste(dnaSeq3,'A',sep="")
+  }
+  else if(randVal==2){
+    dnaSeq3 = paste(dnaSeq3,"C",sep="")
+  }
+  else if(randVal==3){
+    dnaSeq3 = paste(dnaSeq3,"T",sep="")
+  }
+  else{
+    dnaSeq3 = paste(dnaSeq3,"G",sep="")
   }
   k = k+1
 }
+print(dnaSeq3)
+
+#print(nchar(dnaSeq3))
