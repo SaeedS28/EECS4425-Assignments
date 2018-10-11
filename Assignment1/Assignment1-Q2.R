@@ -21,6 +21,7 @@ count(seq1,3) # outputs the dimers for the sequence
 
 # Question 3
 
+# Part 1
 extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   # checking for illegal arguments
   if(is.character(seqInFunc)){
@@ -51,7 +52,13 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
     }
     counter <- counter + 1
   }
+  
+  # fast Fourier transform
+  
+  fftCoefficients <- fft(indicatorSequence)
+  print(fftCoefficients)
   print(indicatorSequence)
+  plot(fftCoefficients)
 }
 
-extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 10)
+extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 12)
