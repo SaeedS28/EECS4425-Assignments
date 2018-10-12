@@ -1,4 +1,5 @@
 #install.packages("seqinr")
+library(seqinr)
 
 # I have left the bases as lower case characters because they seem to work with the seqinr package
 
