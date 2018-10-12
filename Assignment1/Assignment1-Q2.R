@@ -62,3 +62,10 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
 }
 
 extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 12)
+
+
+# Part 2
+dnaRaw2 <- read.fasta(file="sequence2.fasta") # Import fasta file
+#print(dnaRaw2)
+seq2 <- getSequence(dnaRaw2[[1]], as.string = FALSE)
+print(seq2[4290:4784])
