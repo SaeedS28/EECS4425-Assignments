@@ -1,9 +1,13 @@
+
 #install.packages("seqinr")
 library(seqinr)
 
 # I have left the bases as lower case characters because they seem to work with the seqinr package
 
-# Code for Part 1 of Question 1
+# Question 1
+
+
+# Part 1
 i <- 0
 
 dnaSeq1 <- character()
@@ -15,11 +19,11 @@ while (i < 100) { # The loop nuns 400 times because 4 bases x 100 = 400 base str
   dnaSeq1 <- append(dnaSeq1,"g")
   i = i+1
 }
-#print(dnaSeq1)
+print(dnaSeq1)
 #length(dnaSeq1)
 
 
-# Code for Part 2 of Question 1
+# Part 2
 dnaSeq2 <- character()
 randomValGen <- sample(1:4, 400, replace=T) #Generates 400 random integers between 1-4 (representing each base)
 j <- 1
@@ -42,12 +46,12 @@ while(j<401){
   j = j+1
 }
 #count(dnaSeq2,1)
-#print(dnaSeq2)
+print(dnaSeq2)
 
 #print(nchar(dnaSeq2))
 
 
-# Code for Part 3 of Question 1
+# Part 3
 dnaSeq3 <- character()
 k <- 1
 randVal=0;
@@ -82,7 +86,7 @@ while (k<601) {
   k = k+1
 }
 #count(dnaSeq3,1)
-#print(dnaSeq3)
+print(dnaSeq3)
 
 #print(nchar(dnaSeq3))
 
@@ -110,6 +114,12 @@ count(seq1,3) # outputs the dimers for the sequence
 
 # Part 1
 extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
+  # "static" variable for graph naming convention  
+  staticVarCounter <- attr(extractAndIndicate, "graphCount")
+  if (is.null(staticVarCounter)) {
+    staticVarCounter <- 1
+  }
+  
   # checking for illegal arguments
   if(is.character(seqInFunc)){
     print("Data passed in is a char vector")
@@ -140,12 +150,20 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
     counter <- counter + 1
   }
   counter <- 1
-  # fast Fourier transform
+  print(indicatorSequence)
   
+  # fast Fourier transform
   fftCoefficients <- fft(indicatorSequence)
   print(fftCoefficients)
-  print(indicatorSequence)
+  
+  fname = sprintf("fourierAnalysisGraph-%d.jpg", staticVarCounter)
+  jpeg(fname)
   plot(fftCoefficients)
+  dev.off
+  
+  staticVarCounter <- staticVarCounter + 1
+  attr(extractAndIndicate, "graphCount") <<- staticVarCounter
+  
 }
 
 extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 12)
@@ -157,7 +175,7 @@ dnaRaw2 <- read.fasta(file="sequence2.fasta") # Import fasta file for 2nd sequen
 codingSequence1 <- getSequence(dnaRaw2[[1]], as.string = FALSE)
 
 # According to the annotation file, the following range of values identify the area of the genome
-# that codes for a protien with protein_id=WP_010877517.1
+# that codes for a protien with protein_id WP_010877517.1
 extractAndIndicate(seqInFunc = codingSequence1, startIndex = 4290, endIndex = 4784)
 
 # The following range of values identify the area of the genome that doesn't code for any protein
