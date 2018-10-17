@@ -153,17 +153,19 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   print(indicatorSequence)
   
   # fast Fourier transform
-  fftCoefficients <- fft(indicatorSequence)
-  print(fftCoefficients)
+  #fftCoeff <- complex()
+  fftCoeff <- fft(indicatorSequence)
+  
+  print(Mod(fftCoeff))
+  
   
   fname = sprintf("fourierAnalysisGraph-%d.jpg", staticVarCounter)
   jpeg(fname)
-  plot(fftCoefficients)
+  plot(Mod(fftCoeff))
   dev.off
-  
+  print("reached")
   staticVarCounter <- staticVarCounter + 1
   attr(extractAndIndicate, "graphCount") <<- staticVarCounter
-  
 }
 
 extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 12)
