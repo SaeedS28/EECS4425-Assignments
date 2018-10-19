@@ -10,15 +10,7 @@ library(seqinr)
 # Part 1
 i <- 0
 
-dnaSeq1 <- character()
-
-while (i < 100) { # The loop nuns 400 times because 4 bases x 100 = 400 base strand
-  dnaSeq1 <- append(dnaSeq1,"a")
-  dnaSeq1 <- append(dnaSeq1,"c")
-  dnaSeq1 <- append(dnaSeq1,"t")
-  dnaSeq1 <- append(dnaSeq1,"g")
-  i = i+1
-}
+dnaSeq1 <- rep(c("a","c","t","g"), 100)
 print(dnaSeq1)
 #length(dnaSeq1)
 
@@ -156,8 +148,7 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   #fftCoeff <- complex()
   fftCoeff <- fft(indicatorSequence)
   
-  print(Mod(fftCoeff))
-  
+ # print(Mod(fftCoeff))
   
   fname = sprintf("fourierAnalysisGraph-%d.jpg", staticVarCounter)
   jpeg(fname)
