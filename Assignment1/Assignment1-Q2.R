@@ -86,6 +86,7 @@ print(dnaSeq3)
 
 # Question 2
 
+
 # Part a
 dnaRaw1 <- read.fasta(file="sequence1.fasta") # Import fasta file
 seq1 <- getSequence(dnaRaw1[[1]], as.string = FALSE) # Extracts the nucleotides from fasta file
@@ -103,6 +104,7 @@ count(seq1,3) # outputs the dimers for the sequence
 # -----------------------------------------------------------------------------------------------------------
 
 # Question 3
+
 
 # Part 1
 extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
@@ -125,7 +127,7 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   
   # fetches the subsequence from the bigger sequence
   subsequence <- seqInFunc[startIndex:endIndex]
-  print(subsequence)
+  #print(subsequence)
   
   # generate indicator sequence
   counter <- 1
@@ -148,17 +150,17 @@ extractAndIndicate <- function(seqInFunc, startIndex, endIndex){
   #fftCoeff <- complex()
   fftCoeff <- fft(indicatorSequence)
   
- # print(Mod(fftCoeff))
-  
+  xyz <- c(1:length(fftCoeff))
+  #print(xyz)
   fname = sprintf("fourierAnalysisGraph-%d.jpg", staticVarCounter)
   jpeg(fname)
-  plot(Mod(fftCoeff))
+  plot(xyz, Mod(fftCoeff), type = "l",xlab = "points", ylab = "magnitude")
   dev.off
-  print("reached")
   staticVarCounter <- staticVarCounter + 1
   attr(extractAndIndicate, "graphCount") <<- staticVarCounter
 }
 
+#Testing with a sequence from question 2
 extractAndIndicate(seqInFunc = seq1, startIndex = 1, endIndex = 12)
 
 
