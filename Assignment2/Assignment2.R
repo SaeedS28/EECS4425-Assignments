@@ -24,11 +24,11 @@ print(sprintf("Sum of the vector: %s", sum(lengthExon)))
 # Now randomize the process of finding the starting point of the exons
 
 startPoints <-integer()
-startPoints[i] <- sample(500:10000, replace=T)
+startPoints[i] <- sample(500:10000, replace=T) # Seed
 
 while(i <= length(lengthExon)){
   i <- i+1
-  startPoints[i] <- startPoints[i-1]+lengthExon[i-1]+sample(12000:18000, replace=T)
+  startPoints[i] <- startPoints[i-1]+lengthExon[i-1]+sample(12000:18000, replace=T) # Randomizes the start points based on previous results
 }
 
 print(sprintf("Length of startVector: %s  Length of exons: %s", length(startPoints), length(startPoints)))
