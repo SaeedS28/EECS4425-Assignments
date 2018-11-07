@@ -35,3 +35,30 @@ print(sprintf("Length of startVector: %s  Length of exons: %s", length(startPoin
 
 print(lengthExon)
 print(startPoints)
+
+dnaSequence <- character(mode=)
+
+ind <- 1
+
+while(ind <= 1e6){
+  if(ind %in% startPoints){
+    grab <- match(ind,startPoints)
+    looper <- startPoints[grab]+lengthExon[grab]
+    for (counter in grab:looper ) {
+      if(counter %% 3 == 0){
+        dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.5,0.25,0.15,0.1)))
+      }
+      else{
+        dnaSequence <- append(dnaSequence, sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25)))
+      }
+      print(dnaSequence[ind])
+      ind <- ind+1
+    }
+  }
+  else{
+    dnaSequence <- append(dnaSequence, sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25)))
+    print(dnaSequence[ind])
+    ind <- ind+1
+  }
+  
+}
