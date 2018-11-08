@@ -5,7 +5,7 @@ lengthExon <- integer()
 i <- 1
 
 # Puts the first value in the vector to get things going
-lengthExon[i] <- sample(500:10000, replace=T)
+lengthExon[i] <- sample(500:10000, replace=F)
 
 # Now checks to see if the sum is still less than 100 000
 while(sum(lengthExon) <= 100000){
@@ -40,26 +40,26 @@ dnaSequence <- rep('D',1e6)
 #print(length(dnaSequence))
 
 ind <- 1
+lowerBound <- -1
+upperBount <- -1
 
 while(ind <= 1e6){
-  if(ind %in% startPoints){
-    grab <- match(ind,startPoints)
-    looper <- startPoints[grab]+lengthExon[grab]
-    for (counter in grab:looper ) {
-      if(counter %% 3 == 0){
-        dnaSequence[ind] <- append(dnaSequence, sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.5,0.25,0.15,0.1)))
-      }
-      else{
-        dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
-      }
-      print(ind)
-      ind <- ind + 1
-    }
-  }
-  else{
-    dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
-    print(ind)
-    ind <- ind + 1
+  if(ind %in% startPoints){ # Sets a running window
+    temp <- match(ind,startPoints)
+    lowerBound <- startPoints[temp]
+    upperBount <- lengthExon[temp]
   }
   
+  if(ind >= lowerBound && ind <= upperBount){
+    if(ind %% 3 == 0){
+      dnaSequence[ind] <- append(dnaSequence, sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.5,0.25,0.15,0.1)))
+    }
+    else{
+      dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
+    }
+  }else{
+    dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
+  }
+  print(ind)
+  ind <- ind +1
 }
