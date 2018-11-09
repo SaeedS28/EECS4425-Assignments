@@ -26,40 +26,35 @@ print(sprintf("Sum of the vector: %s", sum(lengthExon)))
 startPoints <-integer()
 startPoints[i] <- sample(500:10000, replace=T) # Seed
 
-while(i <= length(lengthExon)){
+while(i < length(lengthExon)){
   i <- i+1
   startPoints[i] <- startPoints[i-1]+lengthExon[i-1]+sample(12000:18000, replace=T) # Randomizes the start points based on previous results
 }
 
 print(sprintf("Length of startVector: %s  Length of exons: %s", length(startPoints), length(startPoints)))
 
-print(lengthExon)
-print(startPoints)
+#print(lengthExon)
+#print(startPoints)
 
-dnaSequence <- rep('D',1e6)
+dnaSequence <- sample(c('A','C','T','G'), size= 1e6, replace = TRUE, prob = c(0.25,0.25,0.25,0.25)) #Fills the background with data
 #print(length(dnaSequence))
 
 ind <- 1
-lowerBound <- -1
-upperBount <- -1
 
-while(ind <= 1e6){
-  if(ind %in% startPoints){ # Sets a running window
-    temp <- match(ind,startPoints)
-    lowerBound <- startPoints[temp]
-    upperBount <- lengthExon[temp]
-  }
-  
-  if(ind >= lowerBound && ind <= upperBount){
-    if(ind %% 3 == 0){
-      dnaSequence[ind] <- append(dnaSequence, sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.5,0.25,0.15,0.1)))
+print("Building Sequence. Please wait...")
+
+# Loops until the size of the startPoint vector and replaces the bases that are indexed in positions where pos%%3=0
+# Way faster than looping through 1000 000 times!
+while(ind<=length(startPoints)){
+  starts <- startPoints[ind]
+  len <- lengthExon[ind]
+  for (counter in starts:(starts+len)) {
+    print(counter)
+    if(counter %% 3 == 0){
+      dnaSequence[counter] <- sample(c('A','C','T','G'), size= 1, replace = TRUE, prob = c(0.5,0.25,0.15,0.1))
     }
-    else{
-      dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
-    }
-  }else{
-    dnaSequence[ind] <- sample(c('A','C','T','G'), 1, replace=TRUE, prob=c(0.25,0.25,0.25,0.25))
   }
-  print(ind)
-  ind <- ind +1
+  ind <- ind+1
 }
+
+print("Sequence Built!")
