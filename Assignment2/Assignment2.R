@@ -16,15 +16,13 @@ i <- 1
 # If the sum is greater than 100 000, it subtracts the difference from the element with the highest value
 # to get things back to 100 000.
 maxIndex <- which.max(lengthExon)
-
 difference <- sum(lengthExon) - 100000 # Sum will always be greater than or equal to 100000
 lengthExon[maxIndex] <- lengthExon[maxIndex]-difference
 print(sprintf("Sum of the vector: %s", sum(lengthExon)))
 
 # Now randomize the process of finding the starting point of the exons
-
 startPoints <-integer()
-startPoints[i] <- sample(500:10000, replace=T) # Seed
+startPoints[i] <- sample(5000:10000, replace=T) # Seed
 
 while(i < length(lengthExon)){
   i <- i+1
@@ -41,19 +39,19 @@ dnaSequence <- sample(c('A','C','T','G'), size= 1e6, replace = TRUE, prob = c(0.
 
 ind <- 1
 
+
 print("Building Sequence. Please wait...")
 
-# Loops until the size of the startPoint vector and replaces the bases that are indexed in positions where pos%%3=0
+# Loops until the size of the startPoint vector since that's how many exon partitions there are
 # Way faster than looping through 1000 000 times!
 while(ind<=length(startPoints)){
-  starts <- startPoints[ind]
+  starts <- startPoints[ind] #sets the start point to the ones in the startPoints vector
   len <- lengthExon[ind]
-  for (counter in starts:(starts+len)) {
-    print(counter)
-    if(counter %% 3 == 0){
-      dnaSequence[counter] <- sample(c('A','C','T','G'), size= 1, replace = TRUE, prob = c(0.5,0.25,0.15,0.1))
-    }
-  }
+  replacer <- seq(starts,starts+len)
+  #print(replacer)
+  subseq <-replacer[replacer %% 3 == 0] # extracts the values divisible by three
+  dnaSequence[subseq]<- sample(c('A','C','T','G'), size=length(subseq),prob=c(0.5,0.25,0.15,0.1),replace=TRUE)
+  print(dnaSequence[subseq])
   ind <- ind+1
 }
 
