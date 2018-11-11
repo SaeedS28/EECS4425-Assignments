@@ -51,8 +51,35 @@ while(ind<=length(startPoints)){
   #print(replacer)
   subseq <-replacer[replacer %% 3 == 0] # extracts the values divisible by three
   dnaSequence[subseq]<- sample(c('A','C','T','G'), size=length(subseq),prob=c(0.5,0.25,0.15,0.1),replace=TRUE)
-  print(dnaSequence[subseq])
+  #print(dnaSequence[subseq])
   ind <- ind+1
 }
 
 print("Sequence Built!")
+
+# Question 2
+# Part 1
+indicatorGSeq <-character()
+dnaCopy <- character()
+
+dnaCopy <- dnaSequence[1:length(dnaSequence)]
+dnaCopy <- tolower(dnaCopy)
+indicatorGSeq <- dnaCopy
+
+# Replaces g's with ones and the rest with zeroes
+indicatorGSeq[dnaCopy!='g'] <- 0
+indicatorGSeq[dnaCopy=='g'] <- 1
+indicatorGSeq <- as.numeric(indicatorGSeq)
+#print(indicatorGSeq)
+
+# Compute FFTs for the sequence with a window size of 351
+window <- 351 #characters displayed in every read
+myfunc<- function(y) Mod(fft(indicatorGSeq[y:(y+window-1)]))
+shiftVals <- seq(1,length(indicatorGSeq),by=3) # shift 3 after every read for the length of the sequence
+# shiftVals
+
+readWindows <- sapply(shiftVals,myfunc)
+readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
+
+xAxis <- c(1:length(readWindows))
+plot(xAxis, readWindows, type = "l",xlab = "points", ylab = "magnitude")

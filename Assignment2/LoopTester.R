@@ -1,10 +1,9 @@
-x<- sample(c('A','C','T','G'), size=600,replace=TRUE) 
-rseq<- seq(3,600,3) 
-x[rseq]<- sample(c('A','C','T','G'), size=200,prob=c(0.5,0.25,0.15,0.1),replace=TRUE)
+# compute sums of windows of size 3 over a small sequence of integers, with windows jumping by 3
 
-print(length(x))
-
-y <- seq(400,600,2)
-xseq <- y[y%%4==0]
-print(xseq)
+x = 1:30
+window <- 3
+myfunc<- function(y) print(x[y:(y+window-1)] )
+z = seq(1,28,by=3)
+zz <- sapply(z,myfunc)
+zz
 
