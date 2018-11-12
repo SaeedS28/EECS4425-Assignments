@@ -5,7 +5,7 @@ lengthExon <- integer()
 i <- 1
 
 # Puts the first value in the vector to get things going
-lengthExon[i] <- sample(500:10000, replace=F)
+lengthExon[i] <- sample(500:10000, replace=T)
 
 # Now checks to see if the sum is still less than 100 000
 while(sum(lengthExon) <= 100000){
@@ -74,12 +74,15 @@ indicatorGSeq <- as.numeric(indicatorGSeq)
 
 # Compute FFTs for the sequence with a window size of 351
 window <- 351 #characters displayed in every read
-myfunc<- function(y) Mod(fft(indicatorGSeq[y:(y+window-1)]))
+myfunc<- function(y) max(Mod(fft((indicatorGSeq[y:(y+window-1)])))) # More efficient to take the mod of fft of avg
 shiftVals <- seq(1,length(indicatorGSeq),by=3) # shift 3 after every read for the length of the sequence
 # shiftVals
 
 readWindows <- sapply(shiftVals,myfunc)
 readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
-
 xAxis <- c(1:length(readWindows))
-plot(xAxis, readWindows, type = "l",xlab = "points", ylab = "magnitude")
+
+# Define the threshold to be 90% of the max mean
+maxMeanThreshold <- 0.85*max(readWindows)
+plot(xAxis, readWindows, type = "l",xlab = "Slides", ylab = "Magnitude of the average")
+abline(h=maxMeanThreshold, col="blue")
