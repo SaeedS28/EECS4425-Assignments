@@ -59,7 +59,7 @@ print("Sequence Built!")
 
 # Question 2
 # Part 1
-indicatorGSeq <-character()
+indicatorGSeq <- character()
 dnaCopy <- character()
 
 dnaCopy <- dnaSequence[1:length(dnaSequence)]
@@ -74,32 +74,18 @@ indicatorGSeq <- as.numeric(indicatorGSeq)
 
 # Compute FFTs for the sequence with a window size of 351
 window <- 351 #characters displayed in every read
-myfunc<- function(y) max(Mod(fft((indicatorGSeq[y:(y+window-1)])))) # More efficient to take the mod of fft of avg
-shiftVals <- seq(1,length(indicatorGSeq),by=3) # shift 3 after every read for the length of the sequence
+myfunc<- function(y) {
+  (Mod(fft((indicatorGSeq[y:(y+window-1)]))))[117]
+}
+shiftVals <- seq(1,length(dnaSequence),by=3) # shift 3 after every read for the length of the sequence
 # shiftVals
 
 readWindows <- sapply(shiftVals,myfunc)
 readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
-xAxis <- c(1:length(readWindows))
 
 # Define the threshold to be 85% of the max mean
-maxMeanThreshold <- 0.85*max(readWindows)
-plot(xAxis, readWindows, type = "l",xlab = "Slides", ylab = "Magnitude of the average")
-abline(h=maxMeanThreshold, col="blue")
-
-#Part 2
-#Run the same algorithm on the ecoli sequence
-dnaRawEcoli <- read.fasta(file="sequenceFasta.fasta") # Import fasta file
-seqEcoli <- getSequence(dnaRawEcoli[[1]], as.string = FALSE) # Extracts the nucleotides from fasta file
-
-dnaCopyEcoli <- seqEcoli[1:length(seqEcoli)]
-dnaCopyEcoli <- tolower(dnaCopyEcoli)
-indicatorGSeqEcoli <- dnaCopyEcoli
-
-# Replaces g's with ones and the rest with zeroes
-indicatorGSeqEcoli[dnaCopyEcoli!='g'] <- 0
-indicatorGSeqEcoli[dnaCopyEcoli=='g'] <- 1
-indicatorGSeqEcoli <- as.numeric(indicatorGSeqEcoli)
-shiftValsEcoli <- seq(1,length(indicatorGSeqEcoli),by=3)
-readWindowsEcoli <- sapply(shiftValsEcoli, myfunc)
-readWindowsEcoli <- readWindowsEcoli[!is.na(readWindowsEcoli)]
+maxMeanThreshold <- 0.85*max(clearWindow)
+readWindowsCopy <- readWindows[1:length(readWindows)]
+thresholdVector <- readWindowsCopy
+thresholdVector[readWindowsCopy>= maxMeanThreshold] <- 1
+thresholdVector[readWindowsCopy< maxMeanThreshold] <- 0
