@@ -80,7 +80,7 @@ myfunc<- function(y) {
 shiftVals <- seq(1,length(dnaSequence),by=3) # shift 3 after every read for the length of the sequence
 # shiftVals
 
-readWindows <- sapply(shiftVals,myfunc)
+readWisndows <- sapply(shiftVals,myfunc)
 readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
 # Define the threshold to be the midpoint 
@@ -93,5 +93,8 @@ plot(1:length(thresholdVector), thresholdVector, type = "l",xlab = "points", yla
 
 # Import the annotation file
 rawData <- readLines("sequenceAnnotation.txt")
-refinedData <- str_match(rawData,"location=\\d+\\.\\.\\d+|location=complement\\(\\d+\\.\\.\\d+\\)") # regex used to find the locations in the annotation file
+refinedData <- str_match(rawData,"location=[A-Za-z0-9$&+,:;=?@#|'<>.-^*()%!]*") # regex used to find the locations in the annotation file
 refinedData <- refinedData[!is.na(refinedData)]
+
+furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.\\d+") #Fetches the actual locations
+finalRefined <- gsub("\\.\\.", " ", furtherRefinedData)
