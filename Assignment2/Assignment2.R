@@ -83,9 +83,10 @@ shiftVals <- seq(1,length(dnaSequence),by=3) # shift 3 after every read for the 
 readWindows <- sapply(shiftVals,myfunc)
 readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-# Define the threshold to be 85% of the max mean
-maxMeanThreshold <- 0.85*max(clearWindow)
-readWindowsCopy <- readWindows[1:length(readWindows)]
-thresholdVector <- readWindowsCopy
-thresholdVector[readWindowsCopy>= maxMeanThreshold] <- 1
-thresholdVector[readWindowsCopy< maxMeanThreshold] <- 0
+# Define the threshold to be the midpoint 
+maxThreshold <- max(readWindows)
+minThreshold <- min(readWindows)
+threshold <- (maxThreshold + minThreshold)/2
+thresholdVector <- rep(0,length(readWindows))
+thresholdVector[readWindows>threshold] <- 1
+plot(1:length(thresholdVector), thresholdVector, type = "l",xlab = "points", ylab = "magnitude")
