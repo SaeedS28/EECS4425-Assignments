@@ -93,8 +93,17 @@ plot(1:length(thresholdVector), thresholdVector, type = "l",xlab = "points", yla
 
 # Import the annotation file
 rawData <- readLines("sequenceAnnotation.txt")
-refinedData <- str_match(rawData,"location=[A-Za-z0-9$&+,:;=?@#|'<>.-^*()%!]*") # regex used to find the locations in the annotation file
+refinedData <- str_match(rawData,"location=[A-Za-z0-9$&+,:;=?@#|'<>-^*()%!]*\\.\\.[A-Za-z0-9$&+,:;=?@#|'<>-^*()%!]*") # regex used to find the locations in the annotation file
 refinedData <- refinedData[!is.na(refinedData)]
 
-furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.\\d+") #Fetches the actual locations
-finalRefined <- gsub("\\.\\.", " ", furtherRefinedData)
+#extract start location
+furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.") #Fetches the actual locations
+startfinalRefined <- gsub("\\.\\.", "", furtherRefinedData)
+startfinalRefined <- as.numeric(startfinalRefined)
+startfinalRefined <- refinedData[!is.na(startfinalRefined)]
+
+#extract end location
+furtherRefinedData2 <- str_match(refinedData,"\\.\\.\\d+") #Fetches the actual locations
+endfinalRefined <- gsub("\\.\\.", "", furtherRefinedData2)
+endfinalRefined <- as.numeric(endfinalRefined)
+endfinalRefined <- refinedData[!is.na(endfinalRefined)]
