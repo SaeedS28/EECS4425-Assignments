@@ -1,5 +1,5 @@
 library('seqinr')
-
+library(stringr)
 # Question 1
 lengthExon <- integer()
 i <- 1
@@ -90,3 +90,8 @@ threshold <- (maxThreshold + minThreshold)/2
 thresholdVector <- rep(0,length(readWindows))
 thresholdVector[readWindows>threshold] <- 1
 plot(1:length(thresholdVector), thresholdVector, type = "l",xlab = "points", ylab = "magnitude")
+
+# Import the annotation file
+rawData <- readLines("sequenceAnnotation.txt")
+refinedData <- str_match(rawData,"location=\\d+\\.\\.\\d+|location=complement\\(\\d+\\.\\.\\d+\\)") # regex used to find the locations in the annotation file
+refinedData <- refinedData[!is.na(refinedData)]
