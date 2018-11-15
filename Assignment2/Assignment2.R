@@ -100,10 +100,10 @@ refinedData <- refinedData[!is.na(refinedData)]
 furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.") #Fetches the actual locations
 startfinalRefined <- gsub("\\.\\.", "", furtherRefinedData)
 startfinalRefined <- as.numeric(startfinalRefined)
-startfinalRefined <- refinedData[!is.na(startfinalRefined)]
+startfinalRefined <- startfinalRefined[!is.na(startfinalRefined)]
 
 #extract end location
-furtherRefinedData2 <- str_match(refinedData,"\\.\\.\\d+") #Fetches the actual locations
-endfinalRefined <- gsub("\\.\\.", "", furtherRefinedData2)
+furtherRefinedData2 <- str_match(refinedData,"\\.\\.>*\\d+") #Fetches the actual locations
+endfinalRefined <- gsub("\\.\\.>*", "", furtherRefinedData2)
 endfinalRefined <- as.numeric(endfinalRefined)
-endfinalRefined <- refinedData[!is.na(endfinalRefined)]
+endfinalRefined <- endfinalRefined[!is.na(endfinalRefined)]
