@@ -91,19 +91,37 @@ thresholdVector <- rep(0,length(readWindows))
 thresholdVector[readWindows>threshold] <- 1
 plot(1:length(thresholdVector), thresholdVector, type = "l",xlab = "points", ylab = "magnitude")
 
+#Part 2
 # Import the annotation file
 rawData <- readLines("sequenceAnnotation.txt")
 refinedData <- str_match(rawData,"location=[A-Za-z0-9$&+,:;=?@#|'<>-^*()%!]*\\.\\.[A-Za-z0-9$&+,:;=?@#|'<>-^*()%!]*") # regex used to find the locations in the annotation file
 refinedData <- refinedData[!is.na(refinedData)]
 
-#extract start location
-furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.") #Fetches the actual locations
+# extract start location
+furtherRefinedData <- str_match(refinedData,"\\d+\\.\\.") #Fetches the actual start locations
 startfinalRefined <- gsub("\\.\\.", "", furtherRefinedData)
 startfinalRefined <- as.numeric(startfinalRefined)
 startfinalRefined <- startfinalRefined[!is.na(startfinalRefined)]
 
-#extract end location
-furtherRefinedData2 <- str_match(refinedData,"\\.\\.>*\\d+") #Fetches the actual locations
+# extract end location
+furtherRefinedData2 <- str_match(refinedData,"\\.\\.>*\\d+") #Fetches the actual end locations
 endfinalRefined <- gsub("\\.\\.>*", "", furtherRefinedData2)
 endfinalRefined <- as.numeric(endfinalRefined)
 endfinalRefined <- endfinalRefined[!is.na(endfinalRefined)]
+
+ecoliSeq <- read.fasta(file="sequenceFasta.fasta")
+ecoliSeq <- getSequence(ecoliSeq[[1]], as.string = FALSE)
+
+# generate indicator sequence
+indicatorGSeqEcoli <- character()
+dnaCopy2 <- character()
+
+dnaCopy2 <- ecoliSeq[1:length(ecoliSeq)]
+dnaCopy2 <- tolower(dnaCopy2)
+indicatorGSeqEcoli <- dnaCopy2
+
+# Replaces g's with ones and the rest with zeroes
+indicatorGSeqEcoli[dnaCopy2!='g'] <- 0
+indicatorGSeqEcoli[dnaCopy2=='g'] <- 1
+indicatorGSeqEcoli <- as.numeric(indicatorGSeqEcoli)
+#print(indicatorGSeq)
