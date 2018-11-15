@@ -80,7 +80,7 @@ myfunc<- function(y) {
 shiftVals <- seq(1,length(dnaSequence),by=3) # shift 3 after every read for the length of the sequence
 # shiftVals
 
-readWisndows <- sapply(shiftVals,myfunc)
+readWindows <- sapply(shiftVals,myfunc)
 readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
 # Define the threshold to be the midpoint 
@@ -125,3 +125,12 @@ indicatorGSeqEcoli[dnaCopy2!='g'] <- 0
 indicatorGSeqEcoli[dnaCopy2=='g'] <- 1
 indicatorGSeqEcoli <- as.numeric(indicatorGSeqEcoli)
 #print(indicatorGSeq)
+
+shiftValsEcoli <- seq(1,length(indicatorGSeqEcoli),by=3)
+readWindowsEcoli <- sapply(shiftValsEcoli,myfunc)
+readWindowsEcoli <- readWindows[!is.na(readWindowsEcoli)]
+
+thresholdEcoli <- (max(readWindowsEcoli)+min(readWindowsEcoli))/2
+thresholdVectorEcoli <- rep(0,length(readWindowsEcoli))
+thresholdVectorEcoli[readWindows>thresholdEcoli] <- 1
+plot(1:length(thresholdVectorEcoli), thresholdVectorEcoli, type = "l",xlab = "points", ylab = "magnitude")
