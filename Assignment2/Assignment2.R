@@ -134,3 +134,18 @@ thresholdEcoli <- (max(readWindowsEcoli)+min(readWindowsEcoli))/2
 thresholdVectorEcoli <- rep(0,length(readWindowsEcoli))
 thresholdVectorEcoli[readWindows>thresholdEcoli] <- 1
 plot(1:length(thresholdVectorEcoli), thresholdVectorEcoli, type = "l",xlab = "points", ylab = "magnitude")
+
+# Find out where the exons in the indicator fft start and end
+starterInd <- function(y) indicatorGSeqEcoli[y-1]==0 && indicatorGSeqEcoli[y] == 1  # Starting exon condition
+starter <- sapply(1:length(indicatorGSeqEcoli), starterInd)
+
+endInd <- function(y) indicatorGSeqEcoli[y]==1 && indicatorGSeqEcoli[y+1] == 0  # Ending of exon condition
+ender <- sapply(1:length(indicatorGSeqEcoli), starterInd)
+
+starter <- as.integer(starter)
+ender <- as.integer(ender)
+
+# Calculates the true positives
+truePos <- function(y) any(starter[(startfinalRefined[y]/3):(endfinalRefined[y]/3)] == 1 | ender[(startfinalRefined[y]/3): (endfinalRefined[y]/3)] == 1)
+truePositive <- sapply(1:length(startfinalRefined), truePos)
+truePositive <-sum(as.integer(truePositive))
