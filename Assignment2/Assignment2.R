@@ -140,7 +140,53 @@ starterInd <- function(y) indicatorGSeqEcoli[y-1]==0 && indicatorGSeqEcoli[y] ==
 starter <- sapply(1:length(indicatorGSeqEcoli), starterInd)
 
 endInd <- function(y) indicatorGSeqEcoli[y]==1 && indicatorGSeqEcoli[y+1] == 0  # Ending of exon condition
-ender <- sapply(1:length(indicatorGSeqEcoli), starterInd)
+ender <- sapply(1:length(indicatorGSeqEcoli), endInd)
+
+starter <- as.integer(starter)
+ender <- as.integer(ender)
+
+# Calculates the true positives
+truePos <- function(y) any(starter[(startfinalRefined[y]/3):(endfinalRefined[y]/3)] == 1 | ender[(startfinalRefined[y]/3): (endfinalRefined[y]/3)] == 1)
+truePositive <- sapply(1:length(startfinalRefined), truePos)
+truePositive <-sum(as.integer(truePositive))
+
+#Question 2.3
+indicatorGSeqEcoliGC <- character()
+# dnaCopy2 <- character()
+# 
+# dnaCopy2 <- ecoliSeq[1:length(ecoliSeq)]
+# dnaCopy2 <- tolower(dnaCopy2)
+indicatorGSeqEcoliGC <- dnaCopy2
+
+# Replaces g's with ones and the rest with zeroes
+indicatorGSeqEcoliGC[dnaCopy2!='g' || dnaCopy2!='c'] <- 0
+indicatorGSeqEcoliGC[dnaCopy2=='g' || dnaCopy2=='c'] <- 1
+indicatorGSeqEcoli <- as.numeric(indicatorGSeqEcoli)
+
+myfunc<- function(y) {
+  (Mod(fft((indicatorGSeqGC[y:(y+window-1)]))))[117]
+}
+shiftVals <- seq(1,length(dnaSequence),by=3) # shift 3 after every read for the length of the sequence
+# shiftVals
+
+readWindows <- sapply(shiftVals,myfunc)
+readWindows <- readWindows[!is.na(readWindows)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
+
+shiftValsEcoli <- seq(1,length(indicatorGSeqEcoliGC),by=3)
+readWindowsEcoli <- sapply(shiftValsEcoli,myfunc)
+readWindowsEcoli <- readWindows[!is.na(readWindowsEcoli)]
+
+#thresholdEcoli <- (max(readWindowsEcoli)+min(readWindowsEcoli))/2
+thresholdVectorEcoli <- rep(0,length(readWindowsEcoli))
+thresholdVectorEcoli[readWindows>thresholdEcoli] <- 1
+plot(1:length(thresholdVectorEcoli), thresholdVectorEcoli, type = "l",xlab = "points", ylab = "magnitude")
+
+# Find out where the exons in the indicator fft start and end
+starterInd <- function(y) indicatorGSeqEcoliGC[y-1]==0 && indicatorGSeqEcoliGC[y] == 1  # Starting exon condition
+starter <- sapply(1:length(indicatorGSeqEcoliGC), starterInd)
+
+endInd <- function(y) indicatorGSeqEcoliGC[y]==1 && indicatorGSeqEcoliGC[y+1] == 0  # Ending of exon condition
+ender <- sapply(1:length(indicatorGSeqEcoli), endInd)
 
 starter <- as.integer(starter)
 ender <- as.integer(ender)
