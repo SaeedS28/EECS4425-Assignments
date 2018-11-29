@@ -24,7 +24,7 @@ differenceOverFiveThousandExons <- integer()
 differenceOverFiveThousandIntrons <- integer()
 
 i <- 1
-j <- 2
+j <- 1
 
 # Four values of exons greater than or equal to 5000
 while(i<length(endfinalRefined)){
@@ -34,10 +34,13 @@ while(i<length(endfinalRefined)){
   i <- i+1
 }
 
-while(j<length(endfinalRefined)){
-  if((startfinalRefined[j]-endfinalRefined[j-1])>=5000){
+exonSequence <- ecoliSeq[startfinalRefined[differenceOverFiveThousandExons[1]]:endfinalRefined[differenceOverFiveThousandExons[1]]]
+
+while(j<length(endfinalRefined-1)){
+  if((startfinalRefined[j+1]-endfinalRefined[j])>=5000){
     differenceOverFiveThousandIntrons[length(differenceOverFiveThousandIntrons)+1] <- j
   }
   j <- j+1
 }
 
+intronSequence <- ecoliSeq[endfinalRefined[differenceOverFiveThousandIntrons[1]]:startfinalRefined[differenceOverFiveThousandIntrons[1]+1]]
