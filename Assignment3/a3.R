@@ -91,4 +91,33 @@ shiftValsIntron <- seq(1,length(indicatorGIntron),by=3) # shift 3 after every re
 readWindowsIntron <- sapply(shiftValsIntron,intronShift)
 readWindowsIntron <- readWindowsIntron[!is.na(readWindowsIntron)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
+#hist(readWindowsExon)
+plot(1:length(readWindowsIntron), readWindowsIntron, type = "l", main ="Introns Sequence", xlab = "Window", ylab = "Phase")
+plot(1:length(readWindowsExon), readWindowsExon, type = "l", main ="Exon Sequence", xlab = "Window", ylab = "Phase")
+
 hist(readWindowsIntron)
+hist(readWindowsExon)
+
+# Deletes the middle value
+indicatorGExon1Del <-indicatorGExon[-round(length(indicatorGExon)/2)]
+
+exonShift1Del<- function(y) {
+  (Arg(fft((indicatorGExon1Del[y:(y+window-1)]))))[118]
+}
+shiftValsExon1Del <- seq(1,length(indicatorGExon1Del),by=3) # shift 3 after every read for the length of the sequence
+readWindowsExon1Del <- sapply(shiftValsExon1Del,exonShift1Del)
+readWindowsExon1Del <- readWindowsExon1Del[!is.na(readWindowsExon1Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
+
+hist(readWindowsExon1Del)
+
+
+indicatorGExon2Del <-indicatorGExon1Del[-round(length(indicatorGExon1Del)/2)]
+
+exonShift2Del<- function(y) {
+  (Arg(fft((indicatorGExon2Del[y:(y+window-1)]))))[118]
+}
+shiftValsExon2Del <- seq(1,length(indicatorGExon2Del),by=3) # shift 3 after every read for the length of the sequence
+readWindowsExon2Del <- sapply(shiftValsExon2Del,exonShift2Del)
+readWindowsExon2Del <- readWindowsExon2Del[!is.na(readWindowsExon2Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
+
+hist(readWindowsExon2Del)
