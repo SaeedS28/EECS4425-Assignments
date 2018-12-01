@@ -132,11 +132,17 @@ cPhiRight = cPhi+(2*pi/3)
 leftHalf <-(cPhi+cPhiLeft)/2
 rightHalf <- (cPhi+cPhiRight)/2
 
-counts<-1
+counts <- 1
+counts1D <- 1
+counts2D <- 1
+
 classifierOriginal <- integer()
+classifier1Del <- integer()
+classifier2Del <- integer()
+
 while (counts<=length(readWindowsExon)) {
-  val <- readWindowsExon[counts]
-  if(val < leftHalf){
+  val <- readWindowsExon1Del[counts]
+  if(val <= leftHalf){
     classifierOriginal[counts] <- -1
   }
   else if (val >= leftHalf && val <= rightHalf){
@@ -146,6 +152,34 @@ while (counts<=length(readWindowsExon)) {
     classifierOriginal[counts] <- 1
   }
   counts <- counts +1
+}
+
+while (counts1D<=length(readWindowsExon1Del)) {
+  val <- readWindowsExon1Del[counts1D]
+  if(val <= leftHalf){
+    classifier1Del[counts1D] <- -1
+  }
+  else if (val >= leftHalf && val <= rightHalf){
+    classifier1Del[counts1D] <- 0
+  }
+  else{
+    classifier1Del[counts1D] <- 1
+  }
+  counts1D <- counts1D +1
+}
+
+while (counts2D<=length(readWindowsExon2Del)) {
+  val <- readWindowsExon2Del[counts2D]
+  if(val <= leftHalf){
+    classifier2Del[counts2D] <- -1
+  }
+  else if (val >= leftHalf && val <= rightHalf){
+    classifier2Del[counts2D] <- 0
+  }
+  else{
+    classifier2Del[counts2D] <- 1
+  }
+  counts2D <- counts2D +1
 }
 
 # Plotting the function of line on original and deleted sequences 
