@@ -28,7 +28,7 @@ i <- 1
 j <- 1
 
 # Four values of exons greater than or equal to 5000
-while(i<length(endfinalRefined)){
+while(i<=length(endfinalRefined)){
   if((endfinalRefined[i]-startfinalRefined[i])>=5000){
     differenceOverFiveThousandExons[length(differenceOverFiveThousandExons)+1] <- i
   }
@@ -37,7 +37,7 @@ while(i<length(endfinalRefined)){
 
 exonSequence <- ecoliSeq[startfinalRefined[differenceOverFiveThousandExons[1]]:endfinalRefined[differenceOverFiveThousandExons[1]]]
 
-while(j<length(endfinalRefined-1)){
+while(j<=length(endfinalRefined-1)){
   if((startfinalRefined[j+1]-endfinalRefined[j])>=5000){
     differenceOverFiveThousandIntrons[length(differenceOverFiveThousandIntrons)+1] <- j
   }
@@ -73,10 +73,10 @@ indicatorGIntron[dnaCopyIntron =='g'] <- 1
 indicatorGIntron <- as.numeric(indicatorGIntron)
 
 
-#Arg for fft exons
+# Arg for fft exons - Used for questions 2.1 and 2.2
 window <- 351 #characters displayed in every read
 exonShift<- function(y) {
-  (Arg(fft((indicatorGExon[y:(y+window-1)]))))[118]
+  (Arg(fft((indicatorGExon[y:(y+window-1)]))))[118] # 118th value produces better results than 117th
 }
 shiftValsExon <- seq(1,length(indicatorGExon),by=3) # shift 3 after every read for the length of the sequence
 
@@ -94,11 +94,15 @@ readWindowsIntron <- readWindowsIntron[!is.na(readWindowsIntron)] # deletes all 
 plot(1:length(readWindowsIntron), readWindowsIntron, type = "l", main ="Introns Sequence", xlab = "Window", ylab = "Phase")
 plot(1:length(readWindowsExon), readWindowsExon, type = "l", main ="Exon Sequence", xlab = "Window", ylab = "Phase")
 
-hist(readWindowsIntron,breaks = 200)
-histOriginal <- hist(readWindowsExon, breaks=200)
 
-# Deletes the middle value
-indicatorGExon1Del <-indicatorGExon[-round(length(indicatorGExon)/2)]
+#Question 2
+hist(readWindowsIntron,breaks = 200) # diplays uniformity
+
+histOriginal <- hist(readWindowsExon, breaks=200) # displays values that clump together
+
+
+# Deletes the middle value for 1 deletion
+indicatorGExon1Del <- indicatorGExon[-round(length(indicatorGExon)/2)]
 
 exonShift1Del<- function(y) {
   (Arg(fft((indicatorGExon1Del[y:(y+window-1)]))))[118]
@@ -107,10 +111,11 @@ shiftValsExon1Del <- seq(1,length(indicatorGExon1Del),by=3) # shift 3 after ever
 readWindowsExon1Del <- sapply(shiftValsExon1Del,exonShift1Del)
 readWindowsExon1Del <- readWindowsExon1Del[!is.na(readWindowsExon1Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-hist1Del <- hist(readWindowsExon1Del,breaks = 400)
+hist1Del <- hist(readWindowsExon1Del,breaks = 200) # Histogram for 1 deletion shows 2 clusters
 
 
-indicatorGExon2Del <- indicatorGExon1Del[-round(length(indicatorGExon1Del)/2)]
+# Deletes the 900th element from the already-deleted sequence
+indicatorGExon2Del <- indicatorGExon1Del[-900]
 
 exonShift2Del<- function(y) {
   (Arg(fft((indicatorGExon2Del[y:(y+window-1)]))))[118]
@@ -119,11 +124,12 @@ shiftValsExon2Del <- seq(1,length(indicatorGExon2Del),by=3) # shift 3 after ever
 readWindowsExon2Del <- sapply(shiftValsExon2Del,exonShift2Del)
 readWindowsExon2Del <- readWindowsExon2Del[!is.na(readWindowsExon2Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-hist2Del=hist(readWindowsExon2Del, breaks =80)
+hist2Del=hist(readWindowsExon2Del, breaks =85)
 
 
+# Question 2.4
 # Finding the three peaks
-cPhiOriginal = hist1Del$breaks[which.max(hist1Del$counts)]
+cPhiOriginal = hist1Del$breaks[which.max(hist1Del$counts)] # phi is the value that corresponds to the highest peak on the unedited sequence
 cPhiLeftOriginal = cPhiOriginal-(2*pi/3)
 cPhiRightOriginal = cPhiOriginal+(2*pi/3)
 
@@ -145,9 +151,10 @@ rollingSum2Del <- integer()
 countSum <- 2
 sums<-0
 
-
+# Questions 2.5 and 2.6
+# Maps these sequences to values based on their distances to the closest phi values
 while (counts<=length(readWindowsExon)) {
-  val <- readWindowsExon1Del[counts]
+  val <- readWindowsExon[counts]
   if(val <= leftHalfOriginal){
     classifierOriginal[counts] <- -1
   }
@@ -160,6 +167,7 @@ while (counts<=length(readWindowsExon)) {
   counts <- counts +1
 }
 
+# Calculates a running total and stores these values in a vector for question 2.6
 rollingSumOriginal[1] <- classifierOriginal[1]
 while (countSum<=length(classifierOriginal)) {
   sums <- classifierOriginal[countSum]
@@ -187,7 +195,6 @@ while (counts1D<=length(readWindowsExon1Del)) {
   counts1D <- counts1D +1
 }
 
-
 rollingSum1Del[1] <- classifier1Del[1]
 while (countSum<=length(classifier1Del)) {
   sums <- classifier1Del[countSum]
@@ -199,27 +206,35 @@ while (countSum<=length(classifier1Del)) {
 countSum <- 2
 
 rolling1DelSeq <- seq(1,length(rollingSum1Del),1)
-plot(rolling1DelSeq,rollingSum1Del,main = "Exon sequence one del")
+plot(rolling1DelSeq,rollingSum1Del,main = "f(j) for the Exon sequence one del")
+
 
 while (counts2D<=length(readWindowsExon2Del)) {
   val <- readWindowsExon2Del[counts2D]
-  if(val <= leftHalf){
+  if(val <= leftHalfOriginal){
     classifier2Del[counts2D] <- -1
   }
-  else if (val >= leftHalf && val <= rightHalf){
+  else if (val >= leftHalfOriginal && val <= rightHalfOriginal){
     classifier2Del[counts2D] <- 0
   }
   else{
     classifier2Del[counts2D] <- 1
   }
-  counts2D <- counts2D +1
+  counts2D <- counts2D + 1
 }
-
-
-
-# Plotting the function of line on original and deleted sequences
 
 countSum <- 2
 
+rollingSum2Del[1] <- classifier2Del[1]
+while (countSum<=length(classifier2Del)) {
+  sums <- classifier2Del[countSum]
+  sums <- sums + rollingSum2Del[countSum-1]
+  rollingSum2Del[countSum] <- sums
+  countSum <- countSum + 1
+}
 
+rolling2DelSeq <- seq(1,length(rollingSum2Del),1)
+plot(rolling2DelSeq,rollingSum2Del,main = "f(j) Exon sequence two del")
 
+# This analysis results in very unreliable data.
+# Hence, the prediction is also incorrect.
