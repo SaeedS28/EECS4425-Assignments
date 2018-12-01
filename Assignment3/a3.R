@@ -120,4 +120,32 @@ shiftValsExon2Del <- seq(1,length(indicatorGExon2Del),by=3) # shift 3 after ever
 readWindowsExon2Del <- sapply(shiftValsExon2Del,exonShift2Del)
 readWindowsExon2Del <- readWindowsExon2Del[!is.na(readWindowsExon2Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-hist(readWindowsExon2Del)
+hist2Del=hist(readWindowsExon2Del)
+
+
+# Finding the three peaks
+cPhi = hist2Del$breaks[which.max(hist2Del$counts)]
+cPhiLeft = cPhi-(2*pi/3)
+cPhiRight = cPhi+(2*pi/3)
+
+# Classifying the original sequence based on these peaks
+leftHalf <-(cPhi+cPhiLeft)/2
+rightHalf <- (cPhi+cPhiRight)/2
+
+counts<-1
+classifierOriginal <- integer()
+while (counts<=length(readWindowsExon)) {
+  val <- readWindowsExon[counts]
+  if(val < leftHalf){
+    classifierOriginal[counts] <- -1
+  }
+  else if (val >= leftHalf && val <= rightHalf){
+    classifierOriginal[counts] <- 0
+  }
+  else{
+    classifierOriginal[counts] <- 1
+  }
+  counts <- counts +1
+}
+
+# Plotting the function of line on original and deleted sequences 
