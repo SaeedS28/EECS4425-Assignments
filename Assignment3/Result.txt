@@ -1,0 +1,1 @@
+After trying many sequences, the results are still messed up. The analysis results in predicting the wrong number of indels at the wrong locations. From this analysis, the original study cannot be proved nor disproved.
