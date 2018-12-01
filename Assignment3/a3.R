@@ -91,12 +91,11 @@ shiftValsIntron <- seq(1,length(indicatorGIntron),by=3) # shift 3 after every re
 readWindowsIntron <- sapply(shiftValsIntron,intronShift)
 readWindowsIntron <- readWindowsIntron[!is.na(readWindowsIntron)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-#hist(readWindowsExon)
 plot(1:length(readWindowsIntron), readWindowsIntron, type = "l", main ="Introns Sequence", xlab = "Window", ylab = "Phase")
 plot(1:length(readWindowsExon), readWindowsExon, type = "l", main ="Exon Sequence", xlab = "Window", ylab = "Phase")
 
-hist(readWindowsIntron)
-hist(readWindowsExon)
+hist(readWindowsIntron,breaks = 200)
+histOriginal <- hist(readWindowsExon, breaks=200)
 
 # Deletes the middle value
 indicatorGExon1Del <-indicatorGExon[-round(length(indicatorGExon)/2)]
@@ -108,10 +107,10 @@ shiftValsExon1Del <- seq(1,length(indicatorGExon1Del),by=3) # shift 3 after ever
 readWindowsExon1Del <- sapply(shiftValsExon1Del,exonShift1Del)
 readWindowsExon1Del <- readWindowsExon1Del[!is.na(readWindowsExon1Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-hist(readWindowsExon1Del)
+hist1Del <- hist(readWindowsExon1Del,breaks = 400)
 
 
-indicatorGExon2Del <-indicatorGExon1Del[-round(length(indicatorGExon1Del)/2)]
+indicatorGExon2Del <- indicatorGExon1Del[-round(length(indicatorGExon1Del)/2)]
 
 exonShift2Del<- function(y) {
   (Arg(fft((indicatorGExon2Del[y:(y+window-1)]))))[118]
@@ -120,17 +119,17 @@ shiftValsExon2Del <- seq(1,length(indicatorGExon2Del),by=3) # shift 3 after ever
 readWindowsExon2Del <- sapply(shiftValsExon2Del,exonShift2Del)
 readWindowsExon2Del <- readWindowsExon2Del[!is.na(readWindowsExon2Del)] # deletes all the NA values from the data. Easier than figuring out the exact shiftVal sequence
 
-hist2Del=hist(readWindowsExon2Del)
+hist2Del=hist(readWindowsExon2Del, breaks =80)
 
 
 # Finding the three peaks
-cPhi = hist2Del$breaks[which.max(hist2Del$counts)]
-cPhiLeft = cPhi-(2*pi/3)
-cPhiRight = cPhi+(2*pi/3)
+cPhiOriginal = hist1Del$breaks[which.max(hist1Del$counts)]
+cPhiLeftOriginal = cPhiOriginal-(2*pi/3)
+cPhiRightOriginal = cPhiOriginal+(2*pi/3)
 
 # Classifying the original sequence based on these peaks
-leftHalf <-(cPhi+cPhiLeft)/2
-rightHalf <- (cPhi+cPhiRight)/2
+leftHalfOriginal <-(cPhiOriginal+cPhiLeftOriginal)/2
+rightHalfOriginal <- (cPhiOriginal+cPhiRightOriginal)/2
 
 counts <- 1
 counts1D <- 1
@@ -139,13 +138,20 @@ counts2D <- 1
 classifierOriginal <- integer()
 classifier1Del <- integer()
 classifier2Del <- integer()
+rollingSumOriginal <- integer()
+rollingSum1Del <- integer()
+rollingSum2Del <- integer()
+
+countSum <- 2
+sums<-0
+
 
 while (counts<=length(readWindowsExon)) {
   val <- readWindowsExon1Del[counts]
-  if(val <= leftHalf){
+  if(val <= leftHalfOriginal){
     classifierOriginal[counts] <- -1
   }
-  else if (val >= leftHalf && val <= rightHalf){
+  else if (val >= leftHalfOriginal && val <= rightHalfOriginal){
     classifierOriginal[counts] <- 0
   }
   else{
@@ -154,12 +160,25 @@ while (counts<=length(readWindowsExon)) {
   counts <- counts +1
 }
 
+rollingSumOriginal[1] <- classifierOriginal[1]
+while (countSum<=length(classifierOriginal)) {
+  sums <- classifierOriginal[countSum]
+  sums <- sums + rollingSumOriginal[countSum-1]
+  rollingSumOriginal[countSum] <- sums
+  countSum <- countSum + 1
+}
+
+rollingOriginalSeq <- seq(1,length(rollingSumOriginal),1)
+plot(rollingOriginalSeq,rollingSumOriginal,main = "Exon sequence without any dels")
+
+countSum <- 2
+
 while (counts1D<=length(readWindowsExon1Del)) {
   val <- readWindowsExon1Del[counts1D]
-  if(val <= leftHalf){
+  if(val <= leftHalfOriginal){
     classifier1Del[counts1D] <- -1
   }
-  else if (val >= leftHalf && val <= rightHalf){
+  else if (val >= leftHalfOriginal && val <= rightHalfOriginal){
     classifier1Del[counts1D] <- 0
   }
   else{
@@ -167,6 +186,20 @@ while (counts1D<=length(readWindowsExon1Del)) {
   }
   counts1D <- counts1D +1
 }
+
+
+rollingSum1Del[1] <- classifier1Del[1]
+while (countSum<=length(classifier1Del)) {
+  sums <- classifier1Del[countSum]
+  sums <- sums + rollingSum1Del[countSum-1]
+  rollingSum1Del[countSum] <- sums
+  countSum <- countSum + 1
+}
+
+countSum <- 2
+
+rolling1DelSeq <- seq(1,length(rollingSum1Del),1)
+plot(rolling1DelSeq,rollingSum1Del,main = "Exon sequence one del")
 
 while (counts2D<=length(readWindowsExon2Del)) {
   val <- readWindowsExon2Del[counts2D]
@@ -182,4 +215,11 @@ while (counts2D<=length(readWindowsExon2Del)) {
   counts2D <- counts2D +1
 }
 
-# Plotting the function of line on original and deleted sequences 
+
+
+# Plotting the function of line on original and deleted sequences
+
+countSum <- 2
+
+
+
